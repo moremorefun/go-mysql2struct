@@ -41,8 +41,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/gomysql2struct-darwin-amd64-${{ github.ref }}.tar.gz
-        asset_name: gomysql2struct-darwin-amd64-${{ github.ref }}.tar.gz
+        asset_path: ./bin/gomysql2struct-darwin-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
+        asset_name: gomysql2struct-darwin-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
         asset_content_type: application/x-compressed-tar
     - name: Upload Release Asset For Linux
       uses: actions/upload-release-asset@v1
@@ -50,8 +50,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/gomysql2struct-linux-amd64-${{ github.ref }}.tar.gz
-        asset_name: gomysql2struct-linux-amd64-${{ github.ref }}.tar.gz
+        asset_path: ./bin/gomysql2struct-linux-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
+        asset_name: gomysql2struct-linux-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
         asset_content_type: application/x-compressed-tar
     - name: Upload Release Asset For Windows
       uses: actions/upload-release-asset@v1
@@ -59,7 +59,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/gomysql2struct-windows-amd64-${{ github.ref }}.tar.gz
-        asset_name: gomysql2struct-windows-amd64-${{ github.ref }}.tar.gz
+        asset_path: ./bin/gomysql2struct-windows-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
+        asset_name: gomysql2struct-windows-amd64-${{ steps.get_version.outputs.VERSION }}.tar.gz
         asset_content_type: application/x-compressed-tar
 
