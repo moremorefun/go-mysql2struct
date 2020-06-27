@@ -33,7 +33,6 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Asset For Darwin
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +42,6 @@ jobs:
         asset_name: gomysql2struct-darwin-amd64-${{ github.ref }}.tar.gz
         asset_content_type: application/x-compressed-tar
     - name: Upload Release Asset For Linux
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +51,6 @@ jobs:
         asset_name: gomysql2struct-linux-amd64-${{ github.ref }}.tar.gz
         asset_content_type: application/x-compressed-tar
     - name: Upload Release Asset For Windows
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
