@@ -15,6 +15,12 @@ const (
     DBCol{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$tableInfo.TableName}}.{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
+// DBCol{{$tableInfo.TableNameCamel}}All 所有字段
+var DBCol{{$tableInfo.TableNameCamel}}All = []string{
+{{- range $x, $colInfo := $tableInfo.Cols}}
+    "{{$tableInfo.TableName}}.{{$colInfo.ColName}}",
+{{- end}}
+}
 
 // 表结构
 // DB{{$tableInfo.TableNameCamel}} {{$tableInfo.TableName}} {{ $tableInfo.TableComment}}
