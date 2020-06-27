@@ -22,8 +22,8 @@
 ## 使用说明
 
 ```
-go run cmd/main.go
-Usage of :
+./gomysql2struct
+Usage of ./gomysql2struct:
   -db string
     	数据库名
   -h	help message
