@@ -1,6 +1,8 @@
 # go-mysql2struct
 
 [![build](https://github.com/moremorefun/go-mysql2struct/workflows/build/badge.svg)](https://github.com/moremorefun/go-mysql2struct/actions?query=workflow%3Abuild)
+[![GitHub release](https://img.shields.io/github/tag/moremorefun/go-mysql2struct.svg?label=release)](https://github.com/moremorefun/go-mysql2struct/releases)
+[![GitHub release date](https://img.shields.io/github/release-date/moremorefun/go-mysql2struct.svg)](https://github.com/moremorefun/go-mysql2struct/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/moremorefun/go-mysql2struct/blob/master/LICENSE)
 [![blog](https://img.shields.io/badge/blog-@moremorefun-brightgreen.svg)](https://www.jidangeng.com)
 
