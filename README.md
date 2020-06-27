@@ -21,6 +21,23 @@
 
 ## 使用说明
 
+```
+go run cmd/main.go
+Usage of :
+  -db string
+    	数据库名
+  -h	help message
+  -host string
+    	数据库ip:端口 (default "127.0.0.1:3306")
+  -o string
+    	文件输出文件夹
+  -package string
+    	包名 (default "model")
+  -pwd string
+    	数据库密码 (default "123456")
+  -user string
+    	数据库用户名 (default "root")
+```
    
 ## 维护者
 
