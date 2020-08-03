@@ -8,8 +8,6 @@ import (
 	"github.com/moremorefun/mcommon"
 )
 
-type H map[string]interface{}
-
 {{range $i, $tableInfo := .Rows}}
 // SQLCreate{{$tableInfo.TableNameCamel}} 创建
 func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbExeAble, row *DB{{$tableInfo.TableNameCamel}}, isIgnore bool) (int64, error) {
@@ -32,7 +30,7 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
     :{{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
     {{- end }}
 )`, ignoreStr),
-            H{
+            mcommon.H{
                 {{- range $x, $colInfo := $tableInfo.Cols}}
                 "{{$colInfo.ColName}}":row.{{$colInfo.ColNameCamel}},
                 {{- end }}
@@ -55,7 +53,7 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
     {{- end}}
     {{- end }}
 )`, ignoreStr),
-            H{
+            mcommon.H{
                 {{- range $x, $colInfo := $tableInfo.Cols}}
                 {{- if $x }}
                 "{{$colInfo.ColName}}":row.{{$colInfo.ColNameCamel}},
@@ -159,7 +157,7 @@ WHERE
 		tx,
 		&row,
 		query.String(),
-		H{
+		mcommon.H{
 			"id": id,
 		},
 	)
@@ -192,7 +190,7 @@ WHERE
 		tx,
 		&rows,
 		query.String(),
-		H{
+		mcommon.H{
 			"ids": ids,
 		},
 	)
@@ -217,7 +215,7 @@ SET
     {{- end }}
 WHERE
 	id=:id`,
-		H{
+		mcommon.H{
 		    {{- range $x, $colInfo := $tableInfo.Cols}}
             "{{$colInfo.ColName}}":row.{{$colInfo.ColNameCamel}},
             {{- end}}
@@ -239,7 +237,7 @@ FROM
 	{{$tableInfo.TableName}}
 WHERE
 	id=:id`,
-		H{
+		mcommon.H{
 			"id": id,
 		},
 	)
