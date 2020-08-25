@@ -2,7 +2,6 @@ package {{.PackageName}}
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/moremorefun/mcommon"
@@ -12,60 +11,44 @@ import (
 // SQLCreate{{$tableInfo.TableNameCamel}} 创建
 func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbExeAble, row *DB{{$tableInfo.TableNameCamel}}, isIgnore bool) (int64, error) {
     var lastID int64
-    var err error
-    ignoreStr := ""
-	if isIgnore {
-		ignoreStr = "IGNORE"
-	}
-    if row.ID > 0 {
-        lastID, err = mcommon.DbExecuteLastIDNamedContent(
-            ctx,
-            tx,
-            fmt.Sprintf(`INSERT %s INTO {{$tableInfo.TableName}} (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end }}
-) VALUES (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    :{{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end }}
-)`, ignoreStr),
-            mcommon.H{
-                {{- range $x, $colInfo := $tableInfo.Cols}}
+    	var err error
+    	query := strings.Builder{}
+    	query.WriteString("INSERT ")
+    	if isIgnore {
+    		query.WriteString("IGNORE ")
+    	}
+    	query.WriteString("INTO {{$tableInfo.TableName}} (\n")
+    	if row.ID > 0 {
+    		query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+    	}
+    	query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
+           {{- if $x }}
+           {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
+           {{- end}}
+           {{- end }}
+    ) VALUES (`)
+    	if row.ID > 0 {
+    		query.WriteString(":{{(index $tableInfo.Cols 0).ColName}},\n")
+    	}
+    	query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
+        {{- if $x }}
+        :{{$colInfo.ColName}}{{- if not $colInfo.IsEnd  }},{{end}}
+        {{- end}}
+        {{- end }}`)
+    	lastID, err = mcommon.DbExecuteLastIDNamedContent(
+    		ctx,
+    		tx,
+    		query.String(),
+    		mcommon.H{
+    			{{- range $x, $colInfo := $tableInfo.Cols}}
                 "{{$colInfo.ColName}}":row.{{$colInfo.ColNameCamel}},
                 {{- end }}
-            },
-        )
-    } else {
-        lastID, err = mcommon.DbExecuteLastIDNamedContent(
-        	ctx,
-        	tx,
-        	fmt.Sprintf(`INSERT %s INTO {{$tableInfo.TableName}} (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{- if $x }}
-    {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end}}
-    {{- end }}
-) VALUES (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{- if $x }}
-    :{{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end}}
-    {{- end }}
-)`, ignoreStr),
-            mcommon.H{
-                {{- range $x, $colInfo := $tableInfo.Cols}}
-                {{- if $x }}
-                "{{$colInfo.ColName}}":row.{{$colInfo.ColNameCamel}},
-                {{- end}}
-                {{- end }}
-            },
-        )
-    }
-	if err != nil {
-		return 0, err
-	}
-	return lastID, nil
+    		},
+    	)
+    	if err != nil {
+    		return 0, err
+    	}
+    	return lastID, nil
 }
 
 // SQLCreateMany{{$tableInfo.TableNameCamel}} 创建多个
@@ -73,10 +56,6 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.
     if len(rows) == 0 {
         return 0, nil
     }
-    ignoreStr := ""
-	if isIgnore {
-		ignoreStr = "IGNORE"
-	}
 	var args []interface{}
 	if rows[0].ID > 0 {
 	    for _, row := range rows {
@@ -105,35 +84,29 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.
 	}
 	var count int64
 	var err error
-	if rows[0].ID > 0 {
-        count, err = mcommon.DbExecuteCountManyContent(
-            ctx,
-            tx,
-            fmt.Sprintf(`INSERT %s INTO {{$tableInfo.TableName}} (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end }}
-) VALUES
-    %%s`, ignoreStr),
-            len(rows),
-            args...,
-        )
-	} else {
-	    count, err = mcommon.DbExecuteCountManyContent(
-            ctx,
-            tx,
-            fmt.Sprintf(`INSERT %s INTO {{$tableInfo.TableName}} (
-    {{- range $x, $colInfo := $tableInfo.Cols}}
+	query := strings.Builder{}
+    query.WriteString("INSERT ")
+    if isIgnore {
+        query.WriteString("IGNORE ")
+    }
+    query.WriteString("INTO {{$tableInfo.TableName}} (\n")
+    if rows[0].ID > 0 {
+        query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+    }
+    query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
     {{- if $x }}
     {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
     {{- end}}
     {{- end }}
 ) VALUES
-    %%s`, ignoreStr),
-            len(rows),
-            args...,
-        )
-	}
+    %s`)
+    count, err = mcommon.DbExecuteCountManyContent(
+        ctx,
+        tx,
+        query.String(),
+        len(rows),
+        args...,
+    )
 	if err != nil {
 		return 0, err
 	}
