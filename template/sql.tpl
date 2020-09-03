@@ -34,7 +34,7 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
         {{- if $x }}
         :{{$colInfo.ColName}}{{- if not $colInfo.IsEnd  }},{{end}}
         {{- end}}
-        {{- end }}`)
+        {{- end }})`)
     	lastID, err = mcommon.DbExecuteLastIDNamedContent(
     		ctx,
     		tx,
