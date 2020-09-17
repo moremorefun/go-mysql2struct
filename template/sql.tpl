@@ -283,7 +283,6 @@ func SQLGet{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.Db
     if keysLen != len(values) {
         return nil, fmt.Errorf("value len error")
     }
-    lastKeyIndex := keysLen - 1
 
 	query := strings.Builder{}
 	query.WriteString("SELECT\n")
@@ -312,11 +311,7 @@ WHERE
             query.WriteString("=:")
             query.WriteString(key)
         }
-        if i == lastKeyIndex {
-            query.WriteString("\n")
-        } else {
-            query.WriteString(",\n")
-        }
+        query.WriteString("\n")
         argMap[key] = value
     }
 
@@ -376,7 +371,6 @@ func SQLSelect{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon
     if keysLen != len(values) {
         return nil, fmt.Errorf("value len error")
     }
-    lastKeyIndex := keysLen - 1
 
 	query := strings.Builder{}
 	query.WriteString("SELECT\n")
@@ -405,11 +399,7 @@ WHERE
             query.WriteString("=:")
             query.WriteString(key)
         }
-        if i == lastKeyIndex {
-            query.WriteString("\n")
-        } else {
-            query.WriteString(",\n")
-        }
+        query.WriteString("\n")
         argMap[key] = value
     }
 
