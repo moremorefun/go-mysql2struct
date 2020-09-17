@@ -3,6 +3,7 @@ package {{.PackageName}}
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/moremorefun/mcommon"
@@ -299,15 +300,17 @@ WHERE
         }
         value := values[i]
         query.WriteString(key)
-        argValues, ok := value.([]interface{})
-        if ok {
-            if len(argValues) == 0 {
+        rt := reflect.TypeOf(value)
+        switch rt.Kind() {
+        case reflect.Slice:
+            s := reflect.ValueOf(value)
+            if s.Len() == 0 {
                 return nil, nil
             }
             query.WriteString(" IN (:")
             query.WriteString(key)
             query.WriteString(" )")
-        } else {
+        default:
             query.WriteString("=:")
             query.WriteString(key)
         }
@@ -396,15 +399,17 @@ WHERE
         }
         value := values[i]
         query.WriteString(key)
-        argValues, ok := value.([]interface{})
-        if ok {
-            if len(argValues) == 0 {
+        rt := reflect.TypeOf(value)
+        switch rt.Kind() {
+        case reflect.Slice:
+            s := reflect.ValueOf(value)
+            if s.Len() == 0 {
                 return nil, nil
             }
             query.WriteString(" IN (:")
             query.WriteString(key)
             query.WriteString(" )")
-        } else {
+        default:
             query.WriteString("=:")
             query.WriteString(key)
         }
