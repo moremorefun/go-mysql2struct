@@ -295,6 +295,9 @@ WHERE
 `)
     argMap := mcommon.H{}
     for i, key := range keys {
+        if i != 0 {
+            query.WriteString("AND ")
+        }
         value := values[i]
         query.WriteString(key)
         argValues, ok := value.([]interface{})
@@ -385,6 +388,9 @@ WHERE
 `)
     argMap := mcommon.H{}
     for i, key := range keys {
+        if i != 0 {
+            query.WriteString("AND ")
+        }
         value := values[i]
         query.WriteString(key)
         argValues, ok := value.([]interface{})
