@@ -333,7 +333,7 @@ WHERE
 }
 
 // SQLSelect{{$tableInfo.TableNameCamel}}Col 根据ids获取
-func SQLSelect{{$tableInfo.TableNameCamel}}Col(ctx context.Context, tx mcommon.DbExeAble, cols []string, ids []int64, orderBys ...string) ([]*DB{{$tableInfo.TableNameCamel}}, error) {
+func SQLSelect{{$tableInfo.TableNameCamel}}Col(ctx context.Context, tx mcommon.DbExeAble, cols []string, ids []int64, orderBys []string, limits []int64) ([]*DB{{$tableInfo.TableNameCamel}}, error) {
     if len(ids) == 0 {
         return nil, nil
     }
@@ -349,6 +349,12 @@ WHERE
         query.WriteString("\nORDER BY\n")
         query.WriteString(strings.Join(orderBys, ",\n"))
 	}
+	if len(limits) == 1 {
+        query.WriteString(fmt.Sprintf("LIMIT %d", limits[0]))
+    }
+    if len(limits) == 2 {
+        query.WriteString(fmt.Sprintf("LIMIT %d,%d", limits[0], limits[1]))
+    }
 	var rows []*DB{{$tableInfo.TableNameCamel}}
 	err := mcommon.DbSelectNamedContent(
 		ctx,
@@ -366,7 +372,7 @@ WHERE
 }
 
 // SQLSelect{{$tableInfo.TableNameCamel}}ColKV 根据ids获取
-func SQLSelect{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.DbExeAble, cols []string, keys []string, values []interface{}, orderBys ...string) ([]*DB{{$tableInfo.TableNameCamel}}, error) {
+func SQLSelect{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.DbExeAble, cols []string, keys []string, values []interface{}, orderBys []string, limits []int64) ([]*DB{{$tableInfo.TableNameCamel}}, error) {
     keysLen := len(keys)
     if 0 == keysLen {
         return nil, fmt.Errorf("keys len error")
@@ -408,6 +414,12 @@ WHERE
     if len(orderBys) > 0 {
         query.WriteString("\nORDER BY\n")
         query.WriteString(strings.Join(orderBys, ",\n"))
+    }
+    if len(limits) == 1 {
+        query.WriteString(fmt.Sprintf("LIMIT %d", limits[0]))
+    }
+    if len(limits) == 2 {
+        query.WriteString(fmt.Sprintf("LIMIT %d,%d", limits[0], limits[1]))
     }
 
 	var rows []*DB{{$tableInfo.TableNameCamel}}
