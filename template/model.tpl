@@ -7,6 +7,13 @@ import "time"
 // TableNames 所有表名
 var TableNames = {{ .TableNamesStr }}
 
+// 表名
+const (
+{{range $i, $tableInfo := .Rows}}
+    DbTable{{$tableInfo.TableNameCamel}} = "{{$tableInfo.TableName}}"
+{{- end}}
+)
+
 // 字段名
 {{range $i, $tableInfo := .Rows}}
 // const {{$tableInfo.TableNameCamel}} full
