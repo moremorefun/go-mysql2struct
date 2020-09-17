@@ -9,10 +9,16 @@ var TableNames = {{ .TableNamesStr }}
 
 // 字段名
 {{range $i, $tableInfo := .Rows}}
-// const {{$tableInfo.TableNameCamel}}
+// const {{$tableInfo.TableNameCamel}} full
 const (
     {{- range $x, $colInfo := $tableInfo.Cols}}
     DBCol{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$tableInfo.TableName}}.{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
+    {{- end}}
+)
+// const {{$tableInfo.TableNameCamel}} short
+const (
+    {{- range $x, $colInfo := $tableInfo.Cols}}
+    DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
 // DBCol{{$tableInfo.TableNameCamel}}All 所有字段
