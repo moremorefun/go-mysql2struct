@@ -351,6 +351,7 @@ WHERE
 	if len(orderBys) > 0 {
         query.WriteString("\nORDER BY\n")
         query.WriteString(strings.Join(orderBys, ",\n"))
+        query.WriteString("\n")
 	}
 	if len(limits) == 1 {
         query.WriteString(fmt.Sprintf("LIMIT %d", limits[0]))
@@ -419,6 +420,7 @@ WHERE
     if len(orderBys) > 0 {
         query.WriteString("\nORDER BY\n")
         query.WriteString(strings.Join(orderBys, ",\n"))
+        query.WriteString("\n")
     }
     if len(limits) == 1 {
         query.WriteString(fmt.Sprintf("LIMIT %d", limits[0]))
