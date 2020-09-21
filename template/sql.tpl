@@ -291,8 +291,10 @@ func SQLGet{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.Db
 	query.WriteString(`
 FROM
 	{{$tableInfo.TableName}}
-WHERE
 `)
+    if len(keys) > 0 {
+        query.WriteString("WHERE\n")
+    }
     argMap := mcommon.H{}
     for i, key := range keys {
         if i != 0 {
@@ -391,8 +393,10 @@ func SQLSelect{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon
 	query.WriteString(`
 FROM
 	{{$tableInfo.TableName}}
-WHERE
 `)
+    if len(keys) > 0 {
+        query.WriteString("WHERE\n")
+    }
     argMap := mcommon.H{}
     for i, key := range keys {
         if i != 0 {
