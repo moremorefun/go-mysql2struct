@@ -278,9 +278,6 @@ WHERE
 // SQLGet{{$tableInfo.TableNameCamel}}ColKV 根据id查询
 func SQLGet{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.DbExeAble, cols []string, keys []string, values []interface{}) (*DB{{$tableInfo.TableNameCamel}}, error) {
 	keysLen := len(keys)
-    if 0 == keysLen {
-        return nil, fmt.Errorf("keys len error")
-    }
     if keysLen != len(values) {
         return nil, fmt.Errorf("value len error")
     }
@@ -380,9 +377,6 @@ WHERE
 // SQLSelect{{$tableInfo.TableNameCamel}}ColKV 根据ids获取
 func SQLSelect{{$tableInfo.TableNameCamel}}ColKV(ctx context.Context, tx mcommon.DbExeAble, cols []string, keys []string, values []interface{}, orderBys []string, limits []int64) ([]*DB{{$tableInfo.TableNameCamel}}, error) {
     keysLen := len(keys)
-    if 0 == keysLen {
-        return nil, fmt.Errorf("keys len error")
-    }
     if keysLen != len(values) {
         return nil, fmt.Errorf("value len error")
     }
