@@ -19,9 +19,9 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
     if isIgnore {
         query.WriteString("IGNORE ")
     }
-    query.WriteString("INTO {{$tableInfo.TableName}} (\n")
+    query.WriteString("INTO {{$tableInfo.TableName}} ( ")
     if row.ID > 0 {
-        query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
        {{- if $x }}
@@ -30,13 +30,14 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
        {{- end }}
 ) VALUES (`)
     if row.ID > 0 {
-        query.WriteString(":{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n:{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
     {{- if $x }}
     :{{$colInfo.ColName}}{{- if not $colInfo.IsEnd  }},{{end}}
     {{- end}}
-    {{- end }})`)
+    {{- end }}
+)`)
     lastID, err = mcommon.DbExecuteLastIDNamedContent(
         ctx,
         tx,
@@ -58,9 +59,9 @@ func SQLCreate{{$tableInfo.TableNameCamel}}Duplicate(ctx context.Context, tx mco
     var lastID int64
     var err error
     query := strings.Builder{}
-    query.WriteString("INSERT INTO {{$tableInfo.TableName}} (\n")
+    query.WriteString("INSERT INTO {{$tableInfo.TableName}} ( ")
     if row.ID > 0 {
-        query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
        {{- if $x }}
@@ -69,13 +70,14 @@ func SQLCreate{{$tableInfo.TableNameCamel}}Duplicate(ctx context.Context, tx mco
        {{- end }}
 ) VALUES (`)
     if row.ID > 0 {
-        query.WriteString(":{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n:{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
     {{- if $x }}
     :{{$colInfo.ColName}}{{- if not $colInfo.IsEnd  }},{{end}}
     {{- end}}
-    {{- end }})`)
+    {{- end }}
+) `)
     updatesLen := len(updates)
     lastUpdateIndex := updatesLen - 1
     if updatesLen > 0 {
@@ -146,9 +148,9 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.
     if isIgnore {
         query.WriteString("IGNORE ")
     }
-    query.WriteString("INTO {{$tableInfo.TableName}} (\n")
+    query.WriteString("INTO {{$tableInfo.TableName}} ( ")
     if rows[0].ID > 0 {
-        query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
     {{- if $x }}
@@ -205,9 +207,9 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}Duplicate(ctx context.Context, tx
 	var count int64
 	var err error
 	query := strings.Builder{}
-    query.WriteString("INSERT INTO {{$tableInfo.TableName}} (\n")
+    query.WriteString("INSERT INTO {{$tableInfo.TableName}} ( ")
     if rows[0].ID > 0 {
-        query.WriteString("{{(index $tableInfo.Cols 0).ColName}},\n")
+        query.WriteString("\n{{(index $tableInfo.Cols 0).ColName}},")
     }
     query.WriteString(`{{- range $x, $colInfo := $tableInfo.Cols}}
     {{- if $x }}
