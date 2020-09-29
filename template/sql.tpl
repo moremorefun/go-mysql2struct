@@ -28,7 +28,7 @@ func SQLCreate{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.DbEx
        {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
        {{- end}}
        {{- end }}
-) VALUES (`)
+) VALUES ( `)
     if row.ID > 0 {
         query.WriteString("\n:{{(index $tableInfo.Cols 0).ColName}},")
     }
@@ -68,7 +68,7 @@ func SQLCreate{{$tableInfo.TableNameCamel}}Duplicate(ctx context.Context, tx mco
        {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
        {{- end}}
        {{- end }}
-) VALUES (`)
+) VALUES ( `)
     if row.ID > 0 {
         query.WriteString("\n:{{(index $tableInfo.Cols 0).ColName}},")
     }
@@ -158,7 +158,7 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}(ctx context.Context, tx mcommon.
     {{- end}}
     {{- end }}
 ) VALUES
-    %s`)
+    %s `)
     count, err = mcommon.DbExecuteCountManyContent(
         ctx,
         tx,
@@ -217,7 +217,7 @@ func SQLCreateMany{{$tableInfo.TableNameCamel}}Duplicate(ctx context.Context, tx
     {{- end}}
     {{- end }}
 ) VALUES
-    %s`)
+    %s `)
     updatesLen := len(updates)
     lastUpdateIndex := updatesLen - 1
     if updatesLen > 0 {
