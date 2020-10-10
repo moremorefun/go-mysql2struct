@@ -53,6 +53,7 @@ var typeForMysqlToGo = map[string]string{
 	"decimal":            "string",
 	"binary":             "string",
 	"varbinary":          "string",
+	"json":               "string",
 }
 
 // DbTable 表信息
@@ -230,7 +231,7 @@ ORDER BY
 
 		colGoType, ok := typeForMysqlToGo[colRow.DataType]
 		if !ok {
-			log.Fatalf("no type %s", colRow.DataType)
+			log.Fatalf("no type %s.%s %s", colRow.TableName, colRow.ColumnName, colRow.DataType)
 		}
 		if colGoType == "time.Time" {
 			isTime = true
@@ -239,19 +240,19 @@ ORDER BY
 
 	// 列信息
 	type stColInfo struct {
-		ColName string
+		ColName      string
 		ColNameCamel string
-		ColType string
+		ColType      string
 		IsColComment bool
-		ColComment string
-		IsEnd bool
+		ColComment   string
+		IsEnd        bool
 	}
 	// 表信息
 	type stTableInfo struct {
-		TableName string
+		TableName      string
 		TableNameCamel string
-		TableComment string
-		Cols []stColInfo
+		TableComment   string
+		Cols           []stColInfo
 	}
 	// 表数组
 	var tableInfos []stTableInfo
@@ -272,10 +273,10 @@ ORDER BY
 		if tableRow.TableComment.Valid {
 			tableComment = tableRow.TableComment.String
 		}
-		tableInfo := stTableInfo {
-			TableName: tableName,
+		tableInfo := stTableInfo{
+			TableName:      tableName,
 			TableNameCamel: tableCamelName,
-			TableComment:tableComment,
+			TableComment:   tableComment,
 		}
 		// 列数据
 		for i, col := range cols {
@@ -287,12 +288,12 @@ ORDER BY
 			commentStr := fmt.Sprintf("%s", col.ColumnComment.String)
 			commentStr = strings.Replace(commentStr, "\n", "-", -1)
 			tableInfo.Cols = append(tableInfo.Cols, stColInfo{
-				ColName: col.ColumnName,
-				ColNameCamel:colCamelName,
-				ColType: colGoType,
+				ColName:      col.ColumnName,
+				ColNameCamel: colCamelName,
+				ColType:      colGoType,
 				IsColComment: col.ColumnComment.Valid && col.ColumnComment.String != "",
-				ColComment:commentStr,
-				IsEnd:i == len(cols) -1,
+				ColComment:   commentStr,
+				IsEnd:        i == len(cols)-1,
 			})
 		}
 
@@ -304,15 +305,15 @@ ORDER BY
 		log.Fatalf("cmd run error: %s", err)
 	}
 	modelInfo := struct {
-		Rows []stTableInfo
-		PackageName string
-		HcommonPkg string
-		IsTime bool
+		Rows          []stTableInfo
+		PackageName   string
+		HcommonPkg    string
+		IsTime        bool
 		TableNamesStr string
 	}{
-		Rows:tableInfos,
-		PackageName: *packageName,
-		IsTime:isTime,
+		Rows:          tableInfos,
+		PackageName:   *packageName,
+		IsTime:        isTime,
 		TableNamesStr: "[]string{" + strings.Join(tableNames, ",") + "}",
 	}
 	modelFilePath := filepath.Join(*output, "db_gen_model.go")
@@ -330,7 +331,6 @@ ORDER BY
 		log.Fatalf("cmd run error: %s", err)
 	}
 
-
 	// sql 文件
 	sqlTpl, err := template.ParseFiles("template/sql.tpl")
 	if err != nil {
@@ -342,11 +342,11 @@ ORDER BY
 		log.Fatalf("open file error: %s", err)
 	}
 	info := struct {
-		Rows []stTableInfo
+		Rows        []stTableInfo
 		PackageName string
-		HcommonPkg string
+		HcommonPkg  string
 	}{
-		Rows:tableInfos,
+		Rows:        tableInfos,
 		PackageName: *packageName,
 	}
 	err = sqlTpl.Execute(newSqlFile, info)
