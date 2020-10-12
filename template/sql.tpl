@@ -310,7 +310,7 @@ FROM
             }
             query.WriteString(" IN (:")
             query.WriteString(key)
-            query.WriteString(" )")
+            query.WriteString(")")
         default:
             query.WriteString("=:")
             query.WriteString(key)
@@ -409,7 +409,7 @@ FROM
             }
             query.WriteString(" IN (:")
             query.WriteString(key)
-            query.WriteString(" )")
+            query.WriteString(")")
         default:
             query.WriteString("=:")
             query.WriteString(key)
