@@ -256,7 +256,8 @@ func SQLGet{{$tableInfo.TableNameCamel}}Col(ctx context.Context, tx mcommon.DbEx
 FROM
 	{{$tableInfo.TableName}}
 WHERE
-	id=:id`)
+	id=:id
+LIMIT 1`)
 
 	var row DB{{$tableInfo.TableNameCamel}}
 	ok, err := mcommon.DbGetNamedContent(
@@ -318,6 +319,7 @@ FROM
         query.WriteString("\n")
         argMap[key] = value
     }
+    query.WriteString("LIMIT 1")
 
 	var row DB{{$tableInfo.TableNameCamel}}
 	ok, err := mcommon.DbGetNamedContent(
