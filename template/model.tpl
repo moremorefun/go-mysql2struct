@@ -37,11 +37,6 @@ var DBCol{{$tableInfo.TableNameCamel}}All = []string{
 
 // 表结构
 // DB{{$tableInfo.TableNameCamel}} {{$tableInfo.TableName}} {{ $tableInfo.TableComment}}
-/*
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{$colInfo.ColName}}{{if not $colInfo.IsEnd  }},{{end}}
-    {{- end}}
-*/
 type DB{{$tableInfo.TableNameCamel}} struct {
     {{- range $x, $colInfo := $tableInfo.Cols}}
     {{$colInfo.ColNameCamel}} {{$colInfo.ColType}}  `db:"{{$colInfo.ColName}}" json:"{{$colInfo.ColName}}"` {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
