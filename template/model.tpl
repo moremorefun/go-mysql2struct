@@ -42,4 +42,15 @@ type DB{{$tableInfo.TableNameCamel}} struct {
     {{$colInfo.ColNameCamel}} {{$colInfo.ColType}}  `db:"{{$colInfo.ColName}}" json:"{{$colInfo.ColName}}"` {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 }
+
+// 表结构 Str
+// DBStr{{$tableInfo.TableNameCamel}} {{$tableInfo.TableName}} {{ $tableInfo.TableComment}}
+type DBStr{{$tableInfo.TableNameCamel}} struct {
+    {{- range $x, $colInfo := $tableInfo.Cols}}
+    {{$colInfo.ColNameCamel}} {{$colInfo.ColType}}  `db:"{{$colInfo.ColName}}" json:"{{$colInfo.ColName}}{{$colInfo.ColTypeWithStr}}"` {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
+    {{- end}}
+}
+
 {{end}}
+
+

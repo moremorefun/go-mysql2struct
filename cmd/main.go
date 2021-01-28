@@ -243,6 +243,7 @@ ORDER BY
 		ColName      string
 		ColNameCamel string
 		ColType      string
+		ColTypeWithStr string
 		IsColComment bool
 		ColComment   string
 		IsEnd        bool
@@ -285,12 +286,20 @@ ORDER BY
 			if !ok {
 				log.Fatalf("no type %s", col.DataType)
 			}
+			colGoTypeWithStr := ""
+			switch  colGoType{
+			case "int64":
+				colGoTypeWithStr = ",string"
+			case "float64":
+				colGoTypeWithStr = ",string"
+			}
 			commentStr := fmt.Sprintf("%s", col.ColumnComment.String)
 			commentStr = strings.Replace(commentStr, "\n", "-", -1)
 			tableInfo.Cols = append(tableInfo.Cols, stColInfo{
 				ColName:      col.ColumnName,
 				ColNameCamel: colCamelName,
 				ColType:      colGoType,
+				ColTypeWithStr: colGoTypeWithStr,
 				IsColComment: col.ColumnComment.Valid && col.ColumnComment.String != "",
 				ColComment:   commentStr,
 				IsEnd:        i == len(cols)-1,
