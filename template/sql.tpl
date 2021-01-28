@@ -1,13 +1,29 @@
 package {{.PackageName}}
 
 import (
+    "bytes"
 	"context"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/moremorefun/mcommon"
 )
+
+var globalIndex int64
+
+// getK 获取key
+func getK(old string) string {
+	globalIndex++
+	old = strings.ReplaceAll(old, ".", "_")
+	old = strings.ReplaceAll(old, "`", "_")
+	var buf bytes.Buffer
+	buf.WriteString(old)
+	buf.WriteString("_")
+	buf.WriteString(strconv.FormatInt(globalIndex, 10))
+	return buf.String()
+}
 
 {{range $i, $tableInfo := .Rows}}
 // SQLCreate{{$tableInfo.TableNameCamel}} 创建
@@ -297,6 +313,7 @@ FROM
     }
     argMap := mcommon.H{}
     for i, key := range keys {
+        k := getK(key)
         if i != 0 {
             query.WriteString("AND ")
         }
@@ -310,14 +327,14 @@ FROM
                 return nil, nil
             }
             query.WriteString(" IN (:")
-            query.WriteString(key)
+            query.WriteString(k)
             query.WriteString(")")
         default:
             query.WriteString("=:")
-            query.WriteString(key)
+            query.WriteString(k)
         }
         query.WriteString("\n")
-        argMap[key] = value
+        argMap[k] = value
     }
     query.WriteString("LIMIT 1")
 
@@ -397,6 +414,7 @@ FROM
     }
     argMap := mcommon.H{}
     for i, key := range keys {
+        k := getK(key)
         if i != 0 {
             query.WriteString("AND ")
         }
@@ -410,14 +428,14 @@ FROM
                 return nil, nil
             }
             query.WriteString(" IN (:")
-            query.WriteString(key)
+            query.WriteString(k)
             query.WriteString(")")
         default:
             query.WriteString("=:")
-            query.WriteString(key)
+            query.WriteString(k)
         }
         query.WriteString("\n")
-        argMap[key] = value
+        argMap[k] = value
     }
     if len(orderBys) > 0 {
         query.WriteString("\nORDER BY\n")
