@@ -51,6 +51,11 @@ type DBStr{{$tableInfo.TableNameCamel}} struct {
     {{- end}}
 }
 
+// DBIntCols{{$tableInfo.TableNameCamel}} int字段
+var DBIntCols{{$tableInfo.TableNameCamel}}{{$tableInfo.TableIntColsStr}}
+// DBFloatCols{{$tableInfo.TableNameCamel}} float字段
+var DBFloatCols{{$tableInfo.TableNameCamel}}{{$tableInfo.TableFloatColsStr}}
+
 {{end}}
 
 

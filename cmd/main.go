@@ -253,6 +253,8 @@ ORDER BY
 		TableName      string
 		TableNameCamel string
 		TableComment   string
+		TableIntColsStr string
+		TableFloatColsStr string
 		Cols           []stColInfo
 	}
 	// 表数组
@@ -278,8 +280,12 @@ ORDER BY
 			TableName:      tableName,
 			TableNameCamel: tableCamelName,
 			TableComment:   tableComment,
+			TableIntColsStr: "",
+			TableFloatColsStr: "",
 		}
 		// 列数据
+		var intCols []string
+		var floatCols []string
 		for i, col := range cols {
 			colCamelName := ToCamel(col.ColumnName)
 			colGoType, ok := typeForMysqlToGo[col.DataType]
@@ -290,8 +296,10 @@ ORDER BY
 			switch  colGoType{
 			case "int64":
 				colGoTypeWithStr = ",string"
+				intCols = append(intCols, fmt.Sprintf(`"%s"`, col.ColumnName))
 			case "float64":
 				colGoTypeWithStr = ",string"
+				floatCols = append(floatCols, fmt.Sprintf(`"%s"`, col.ColumnName))
 			}
 			commentStr := fmt.Sprintf("%s", col.ColumnComment.String)
 			commentStr = strings.Replace(commentStr, "\n", "-", -1)
@@ -304,6 +312,16 @@ ORDER BY
 				ColComment:   commentStr,
 				IsEnd:        i == len(cols)-1,
 			})
+		}
+		if len(intCols) > 0{
+			tableInfo.TableIntColsStr = fmt.Sprintf(" = []string{%s}", strings.Join(intCols, ","))
+		} else {
+			tableInfo.TableIntColsStr = " []string"
+		}
+		if len(floatCols) > 0 {
+			tableInfo.TableFloatColsStr = fmt.Sprintf(" = []string{%s}", strings.Join(floatCols, ","))
+		} else {
+			tableInfo.TableFloatColsStr = " []string"
 		}
 
 		tableInfos = append(tableInfos, tableInfo)
