@@ -266,7 +266,7 @@ ORDER BY
 			log.Fatalf("no col of %s", tableName)
 		}
 		// 表数据
-		tableNames = append(tableNames, fmt.Sprintf(`"%s"`, tableName))
+		tableNames = append(tableNames, fmt.Sprintf("\"`%s`\"", tableName))
 		tableCamelName := ToCamel(tableName)
 		tableComment := fmt.Sprintf("%s", tableRow.TableComment.String)
 		tableComment = strings.Replace(tableComment, "\n", "-", -1)

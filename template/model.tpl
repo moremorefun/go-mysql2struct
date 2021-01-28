@@ -10,7 +10,7 @@ var TableNames = {{ .TableNamesStr }}
 // 表名
 const (
 {{range $i, $tableInfo := .Rows}}
-    DbTable{{$tableInfo.TableNameCamel}} = "{{$tableInfo.TableName}}"
+    DbTable{{$tableInfo.TableNameCamel}} = "`{{$tableInfo.TableName}}`"
 {{- end}}
 )
 
@@ -19,19 +19,19 @@ const (
 // const {{$tableInfo.TableNameCamel}} full
 const (
     {{- range $x, $colInfo := $tableInfo.Cols}}
-    DBCol{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$tableInfo.TableName}}.{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
+    DBCol{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "`{{$tableInfo.TableName}}`.`{{$colInfo.ColName}}`" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
 // const {{$tableInfo.TableNameCamel}} short
 const (
     {{- range $x, $colInfo := $tableInfo.Cols}}
-    DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
+    DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "`{{$colInfo.ColName}}`" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
 // DBCol{{$tableInfo.TableNameCamel}}All 所有字段
 var DBCol{{$tableInfo.TableNameCamel}}All = []string{
 {{- range $x, $colInfo := $tableInfo.Cols}}
-    "{{$tableInfo.TableName}}.{{$colInfo.ColName}}",
+    "`{{$tableInfo.TableName}}`.`{{$colInfo.ColName}}`",
 {{- end}}
 }
 
