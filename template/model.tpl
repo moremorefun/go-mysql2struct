@@ -43,19 +43,6 @@ type DB{{$tableInfo.TableNameCamel}} struct {
     {{- end}}
 }
 
-// 表结构 Str
-// DBStr{{$tableInfo.TableNameCamel}} {{$tableInfo.TableName}} {{ $tableInfo.TableComment}}
-type DBStr{{$tableInfo.TableNameCamel}} struct {
-    {{- range $x, $colInfo := $tableInfo.Cols}}
-    {{$colInfo.ColNameCamel}} {{$colInfo.ColType}}  `db:"{{$colInfo.ColName}}" json:"{{$colInfo.ColName}}{{$colInfo.ColTypeWithStr}}"` {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
-    {{- end}}
-}
-
-// DBIntCols{{$tableInfo.TableNameCamel}} int字段
-var DBIntCols{{$tableInfo.TableNameCamel}}{{$tableInfo.TableIntColsStr}}
-// DBFloatCols{{$tableInfo.TableNameCamel}} float字段
-var DBFloatCols{{$tableInfo.TableNameCamel}}{{$tableInfo.TableFloatColsStr}}
-
 {{end}}
 
 
