@@ -25,7 +25,7 @@ const (
 // const {{$tableInfo.TableNameCamel}} short
 const (
     {{- range $x, $colInfo := $tableInfo.Cols}}
-    DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "{{$colInfo.ColName}}" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
+    DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "`{{$colInfo.ColName}}`" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
 // DBCol{{$tableInfo.TableNameCamel}}All 所有字段
