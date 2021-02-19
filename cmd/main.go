@@ -148,6 +148,7 @@ func main() {
 	var dbName = flag.String("db", "", "数据库名")
 	var packageName = flag.String("package", "model", "包名")
 	var output = flag.String("o", "", "文件输出文件夹")
+	var isMtool = flag.Bool("mtool", false, "是否使用mtool")
 	var h = flag.Bool("h", false, "help message")
 	flag.Parse()
 	if *h {
@@ -240,22 +241,22 @@ ORDER BY
 
 	// 列信息
 	type stColInfo struct {
-		ColName      string
-		ColNameCamel string
-		ColType      string
+		ColName        string
+		ColNameCamel   string
+		ColType        string
 		ColTypeWithStr string
-		IsColComment bool
-		ColComment   string
-		IsEnd        bool
+		IsColComment   bool
+		ColComment     string
+		IsEnd          bool
 	}
 	// 表信息
 	type stTableInfo struct {
-		TableName      string
-		TableNameCamel string
-		TableComment   string
-		TableIntColsStr string
+		TableName         string
+		TableNameCamel    string
+		TableComment      string
+		TableIntColsStr   string
 		TableFloatColsStr string
-		Cols           []stColInfo
+		Cols              []stColInfo
 	}
 	// 表数组
 	var tableInfos []stTableInfo
@@ -277,10 +278,10 @@ ORDER BY
 			tableComment = tableRow.TableComment.String
 		}
 		tableInfo := stTableInfo{
-			TableName:      tableName,
-			TableNameCamel: tableCamelName,
-			TableComment:   tableComment,
-			TableIntColsStr: "",
+			TableName:         tableName,
+			TableNameCamel:    tableCamelName,
+			TableComment:      tableComment,
+			TableIntColsStr:   "",
 			TableFloatColsStr: "",
 		}
 		// 列数据
@@ -293,7 +294,7 @@ ORDER BY
 				log.Fatalf("no type %s", col.DataType)
 			}
 			colGoTypeWithStr := ""
-			switch  colGoType{
+			switch colGoType {
 			case "int64":
 				colGoTypeWithStr = ",string"
 				intCols = append(intCols, fmt.Sprintf(`"%s"`, col.ColumnName))
@@ -304,16 +305,16 @@ ORDER BY
 			commentStr := fmt.Sprintf("%s", col.ColumnComment.String)
 			commentStr = strings.Replace(commentStr, "\n", "-", -1)
 			tableInfo.Cols = append(tableInfo.Cols, stColInfo{
-				ColName:      col.ColumnName,
-				ColNameCamel: colCamelName,
-				ColType:      colGoType,
+				ColName:        col.ColumnName,
+				ColNameCamel:   colCamelName,
+				ColType:        colGoType,
 				ColTypeWithStr: colGoTypeWithStr,
-				IsColComment: col.ColumnComment.Valid && col.ColumnComment.String != "",
-				ColComment:   commentStr,
-				IsEnd:        i == len(cols)-1,
+				IsColComment:   col.ColumnComment.Valid && col.ColumnComment.String != "",
+				ColComment:     commentStr,
+				IsEnd:          i == len(cols)-1,
 			})
 		}
-		if len(intCols) > 0{
+		if len(intCols) > 0 {
 			tableInfo.TableIntColsStr = fmt.Sprintf(" = []string{%s}", strings.Join(intCols, ","))
 		} else {
 			tableInfo.TableIntColsStr = " []string"
@@ -362,6 +363,12 @@ ORDER BY
 	sqlTpl, err := template.ParseFiles("template/sql.tpl")
 	if err != nil {
 		log.Fatalf("cmd run error: %s", err)
+	}
+	if *isMtool {
+		sqlTpl, err = template.ParseFiles("template/sql-mtool.tpl")
+		if err != nil {
+			log.Fatalf("cmd run error: %s", err)
+		}
 	}
 	sqlFilePath := filepath.Join(*output, "db_gen_sql.go")
 	newSqlFile, err := os.OpenFile(sqlFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
