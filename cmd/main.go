@@ -337,11 +337,13 @@ ORDER BY
 		PackageName   string
 		HcommonPkg    string
 		IsTime        bool
+		IsMtool       bool
 		TableNamesStr string
 	}{
 		Rows:          tableInfos,
 		PackageName:   *packageName,
 		IsTime:        isTime,
+		IsMtool:       *isMtool,
 		TableNamesStr: "[]string{" + strings.Join(tableNames, ",") + "}",
 	}
 	modelFilePath := filepath.Join(*output, "db_gen_model.go")

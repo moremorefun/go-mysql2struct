@@ -22,12 +22,14 @@ const (
     DBCol{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "`{{$tableInfo.TableName}}`.`{{$colInfo.ColName}}`" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
+{{if not $.IsMtool}}
 // const {{$tableInfo.TableNameCamel}} short
 const (
     {{- range $x, $colInfo := $tableInfo.Cols}}
     DBColShort{{$tableInfo.TableNameCamel}}{{$colInfo.ColNameCamel}} = "`{{$colInfo.ColName}}`" {{if $colInfo.IsColComment}} // {{$colInfo.ColComment}} {{end}}
     {{- end}}
 )
+{{end}}
 // DBCol{{$tableInfo.TableNameCamel}}All 所有字段
 var DBCol{{$tableInfo.TableNameCamel}}All = []string{
 {{- range $x, $colInfo := $tableInfo.Cols}}
