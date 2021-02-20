@@ -358,38 +358,39 @@ ORDER BY
 	if err != nil {
 		log.Fatalf("cmd run error: %s", err)
 	}
-
-	// sql 文件
-	sqlTpl, err := template.ParseFiles("template/sql.tpl")
-	if err != nil {
-		log.Fatalf("cmd run error: %s", err)
-	}
-	if *isMtool {
-		sqlTpl, err = template.ParseFiles("template/sql-mtool.tpl")
+	if !*isMtool {
+		// sql 文件
+		sqlTpl, err := template.ParseFiles("template/sql.tpl")
 		if err != nil {
 			log.Fatalf("cmd run error: %s", err)
 		}
-	}
-	sqlFilePath := filepath.Join(*output, "db_gen_sql.go")
-	newSqlFile, err := os.OpenFile(sqlFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-	if err != nil {
-		log.Fatalf("open file error: %s", err)
-	}
-	info := struct {
-		Rows        []stTableInfo
-		PackageName string
-		HcommonPkg  string
-	}{
-		Rows:        tableInfos,
-		PackageName: *packageName,
-	}
-	err = sqlTpl.Execute(newSqlFile, info)
-	if err != nil {
-		log.Fatalf("cmd run error: %s", err)
-	}
-	cmdSql := exec.Command("gofmt", "-w", sqlFilePath)
-	err = cmdSql.Run()
-	if err != nil {
-		log.Fatalf("cmd run error: %s", err)
+		if *isMtool {
+			sqlTpl, err = template.ParseFiles("template/sql-mtool.tpl")
+			if err != nil {
+				log.Fatalf("cmd run error: %s", err)
+			}
+		}
+		sqlFilePath := filepath.Join(*output, "db_gen_sql.go")
+		newSqlFile, err := os.OpenFile(sqlFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+		if err != nil {
+			log.Fatalf("open file error: %s", err)
+		}
+		info := struct {
+			Rows        []stTableInfo
+			PackageName string
+			HcommonPkg  string
+		}{
+			Rows:        tableInfos,
+			PackageName: *packageName,
+		}
+		err = sqlTpl.Execute(newSqlFile, info)
+		if err != nil {
+			log.Fatalf("cmd run error: %s", err)
+		}
+		cmdSql := exec.Command("gofmt", "-w", sqlFilePath)
+		err = cmdSql.Run()
+		if err != nil {
+			log.Fatalf("cmd run error: %s", err)
+		}
 	}
 }
